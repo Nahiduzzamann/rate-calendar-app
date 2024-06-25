@@ -1,9 +1,14 @@
-import React from 'react'
+import React from 'react';
+import { AppBar, Toolbar, Typography } from '@mui/material';
 
-export default function Header() {
+const Header: React.FC = () => {
   return (
-    <div>
-     this is  Header
-    </div>
-  )
-}
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6">Rate Calendar</Typography>
+      </Toolbar>
+    </AppBar>
+  );
+};
+
+export default Header;
