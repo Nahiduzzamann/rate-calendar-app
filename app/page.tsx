@@ -1,9 +1,9 @@
-import Home from "./pages/Home";
+import DateRangePicker from "./components/DateRangePicker";
 
-export default function Main() {
+export default function Home() {
   return (
-    <div>
-     <Home></Home>
+    <div className="px-4 md:px-10 ">
+     <DateRangePicker />
     </div>
   );
 }
