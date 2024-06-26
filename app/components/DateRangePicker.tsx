@@ -2,30 +2,21 @@
 import { Dayjs } from "dayjs";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
-import axios from "axios";
 import RoomCategorySection from "./RoomCategorySection";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
-const fetchRates = async (startDate: string, endDate: string) => {
-  const response = await axios.get(
-    `https://api.bytebeds.com/api/v1/property/1/room/rate-calendar/assessment?start_date=${startDate}&end_date=${endDate}`
-  );
-  return response.data;
-};
+import { fetchRates } from "../utils/fetchRates";
+import { formatDate } from "../utils/formatDate";
 
 const DateRangePicker = () => {
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
+  // console.log("startDate",formatDate(startDate));
 
   const { data, error, isLoading } = useQuery(
-    ["rateCalendar", startDate, endDate],
-    () =>
-      fetchRates(
-        startDate!.toISOString().split("T")[0],
-        endDate!.toISOString().split("T")[0]
-      ),
+    ["rateCalendar", formatDate(startDate), formatDate(endDate)],
+    () => fetchRates(formatDate(startDate), formatDate(endDate)),
     {
       enabled: !!startDate && !!endDate,
     }
@@ -51,12 +42,12 @@ const DateRangePicker = () => {
       <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
         {isLoading && <CircularProgress sx={{ mt: 10 }} />}
         {!error || (
-        <Typography color="error" mt={4}>
-          Error fetching data
-        </Typography>
-      )}
+          <Typography color="error" mt={4}>
+            Error fetching data
+          </Typography>
+        )}
       </Box>
-      
+
       <RoomCategorySection data={data} />
     </Box>
   );
