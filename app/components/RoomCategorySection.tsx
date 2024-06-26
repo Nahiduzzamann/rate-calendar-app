@@ -1,6 +1,16 @@
-'use client'
-import React from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+"use client";
+import React from "react";
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 
 const RoomCategorySection: React.FC<{ data: any }> = ({ data }) => {
   return (
@@ -12,6 +22,7 @@ const RoomCategorySection: React.FC<{ data: any }> = ({ data }) => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell>Date</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell>Available Rooms</TableCell>
                   <TableCell>Booked Rooms</TableCell>
@@ -24,20 +35,38 @@ const RoomCategorySection: React.FC<{ data: any }> = ({ data }) => {
               </TableHead>
               <TableBody>
                 {roomCategory.inventory_calendar.map((inventory: any) => (
-                  <TableRow key={inventory.id}>
-                    <TableCell>{inventory.status ? 'Sellable' : 'Not Sellable'}</TableCell>
-                    <TableCell>{inventory.available}</TableCell>
-                    <TableCell>{inventory.booked}</TableCell>
-                    <TableCell>{roomCategory.occupancy}</TableCell>
-                    {roomCategory.rate_plans.map((ratePlan: any) => (
-                      <TableRow key={ratePlan.id}>
-                        <TableCell>{ratePlan.name}</TableCell>
-                        <TableCell>{ratePlan.calendar[0].rate}</TableCell>
-                        <TableCell>{ratePlan.calendar[0].min_length_of_stay}</TableCell>
-                        <TableCell>{ratePlan.calendar[0].reservation_deadline}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableRow>
+                  <React.Fragment key={inventory.id}>
+                    {roomCategory.rate_plans.map((ratePlan: any, index: number) => {
+                      const rate = ratePlan.calendar.find((rate: any) => rate.date === inventory.date);
+                      return (
+                        <TableRow key={`${inventory.id}-${ratePlan.id}`}>
+                          {index === 0 && (
+                            <>
+                              <TableCell rowSpan={roomCategory.rate_plans.length}>
+                                {new Date(inventory.date).toLocaleDateString()}
+                              </TableCell>
+                              <TableCell rowSpan={roomCategory.rate_plans.length}>
+                                {inventory.status ? "Sellable" : "Not Sellable"}
+                              </TableCell>
+                              <TableCell rowSpan={roomCategory.rate_plans.length}>
+                                {inventory.available}
+                              </TableCell>
+                              <TableCell rowSpan={roomCategory.rate_plans.length}>
+                                {inventory.booked}
+                              </TableCell>
+                              <TableCell rowSpan={roomCategory.rate_plans.length}>
+                                {roomCategory.occupancy}
+                              </TableCell>
+                            </>
+                          )}
+                          <TableCell>{ratePlan.name}</TableCell>
+                          <TableCell>{rate ? rate.rate : 'N/A'}</TableCell>
+                          <TableCell>{rate ? rate.min_length_of_stay : 'N/A'}</TableCell>
+                          <TableCell>{rate ? rate.reservation_deadline : 'N/A'}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </React.Fragment>
                 ))}
               </TableBody>
             </Table>

@@ -29,7 +29,7 @@ const DateRangePicker = () => {
     }
   );
 
-  console.log(data);
+  // console.log(data);
   
   return (
     <div className="my-4">
