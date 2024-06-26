@@ -48,16 +48,16 @@ const DateRangePicker = () => {
           />
         </LocalizationProvider>
       </Box>
-      <Box display="flex" flexDirection="column" alignItems="center">
+      <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
         {isLoading && <CircularProgress sx={{ mt: 10 }} />}
-       
+        {!error || (
+        <Typography color="error" mt={4}>
+          Error fetching data
+        </Typography>
+      )}
       </Box>
-      {error && (
-          <Typography color="error" mt={4}>
-            Error fetching data
-          </Typography>
-        )}
-      {data && <RoomCategorySection data={data} />}
+      
+      <RoomCategorySection data={data} />
     </Box>
   );
 };
