@@ -78,7 +78,7 @@ const RoomCategorySection: React.FC<{ data: any }> = ({ data }) => {
                                 </>
                               )}
                               <TableCell>{ratePlan.name}</TableCell>
-                              <TableCell>{rate ? rate.rate : "N/A"}</TableCell>
+                              <TableCell>{ rate.rate? rate.rate : "N/A"}</TableCell>
                               <TableCell>
                                 { rate.min_length_of_stay ? (rate.min_length_of_stay) : "N/A"}
                               </TableCell>
