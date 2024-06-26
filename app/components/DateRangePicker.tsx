@@ -12,6 +12,7 @@ import { formatDate } from "../utils/formatDate";
 const DateRangePicker = () => {
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
+  const [dateError, setDateError] = useState<string | null>(null);
   // console.log("startDate",formatDate(startDate));
 
   const { data, error, isLoading } = useQuery(
@@ -22,6 +23,27 @@ const DateRangePicker = () => {
     }
   );
 
+  const handleStartDateChange = (newValue: Dayjs | null) => {
+    setStartDate(newValue);
+    if (endDate && newValue && newValue.isAfter(endDate)) {
+      setDateError(
+        "Please enter a valid date range: Start date cannot be after End date."
+      );
+    } else {
+      setDateError(null);
+    }
+  };
+
+  const handleEndDateChange = (newValue: Dayjs | null) => {
+    setEndDate(newValue);
+    if (startDate && newValue && newValue.isBefore(startDate)) {
+      setDateError(
+        "Please enter a valid date range: End date cannot be before Start date."
+      );
+    } else {
+      setDateError(null);
+    }
+  };
   return (
     <Box my={4}>
       <Box display="flex" alignItems="center" mb={2}>
@@ -29,18 +51,23 @@ const DateRangePicker = () => {
           <DatePicker
             label="Start Date"
             value={startDate}
-            onChange={(newValue) => setStartDate(newValue)}
+            onChange={handleStartDateChange}
           />
           <Typography mx={2}>to</Typography>
           <DatePicker
             label="End Date"
             value={endDate}
-            onChange={(newValue) => setEndDate(newValue)}
+            onChange={handleEndDateChange}
           />
         </LocalizationProvider>
       </Box>
       <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
         {isLoading && <CircularProgress sx={{ mt: 10 }} />}
+        {dateError && (
+          <Typography color="error" mb={2}>
+            {dateError}
+          </Typography>
+        )}
         {!error || (
           <Typography color="error" mt={4}>
             Error fetching data
